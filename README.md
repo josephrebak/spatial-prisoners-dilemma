@@ -1,14 +1,12 @@
 # Spatial Prisoner's Dilemma
 
-A cellular automaton simulation of evolutionary game theory's most famous puzzle: can cooperation survive in a world that rewards defection?
-
-This project implements the **Spatial Prisoner's Dilemma** as a synchronous 2D grid simulation, complete with configurable neighborhoods, boundary conditions, payoff parameters, and publication-quality visualizations. It replicates and extends the landmark results from [Nowak & May (1992)](https://www.nature.com/articles/359826a0), which showed that spatial structure alone can sustain cooperation indefinitely.
+A cellular automaton simulation of prisoner's dilemma on a 2D grid. This was my final project for EN.605.716 Modeling and Simulation of Complex Systems. It replicates and extends the results from [Nowak & May (1992)](https://www.nature.com/articles/359826a0), which showed that spatial structure alone can sustain cooperation indefinitely.
 
 ---
 
 ## The Game
 
-In the classic Prisoner's Dilemma, two players each choose to **cooperate** or **defect**. Mutual cooperation yields a modest reward; mutual defection yields nothing; but a defector exploiting a cooperator earns a bonus `b > 1`. Rational self-interest always favors defection — yet cooperation persists everywhere in nature.
+In the classic Prisoner's Dilemma, two players each choose to **cooperate** or **defect**. Mutual cooperation yields a modest reward; mutual defection yields nothing; but a defector exploiting a cooperator earns a bonus `b > 1`.
 
 The spatial version asks: what happens when thousands of agents play repeatedly with their *neighbors*, and copy the strategy of whichever neighbor scored highest?
 
@@ -17,20 +15,7 @@ The spatial version asks: what happens when thousands of agents play repeatedly 
 | **Cooperator** | 1 / 1 | 0 / b |
 | **Defector** | b / 0 | 0 / 0 |
 
-The `b` parameter (temptation to defect) is the key control variable. Small `b` → cooperation dominates. Large `b` → defection sweeps. Near the critical threshold, complex spatial patterns emerge.
-
----
-
-## Emergent Dynamics
-
-The simulation reveals behaviors invisible in non-spatial models:
-
-- **Cooperation clusters** form protective enclaves — defectors on the boundary exhaust their cooperator neighbors while the interior remains shielded
-- **Phase transitions** occur at critical `b` values where cooperation abruptly collapses
-- **Boundary conditions matter** — periodic (toroidal) grids show different steady states than open or fixed-border grids
-- **Neighborhood topology** (Moore 8-cell vs Von Neumann 4-cell) shifts the critical threshold
-
-The transition coloring scheme (C→C blue, D→D red, C→D yellow, D→C green) makes these dynamics visually legible at a glance.
+The `b` parameter (temptation to defect) is the key variable. Small `b` means cooperation dominates. Large `b` means defection dominates. Near the critical threshold (1.8 < b < 2.0), complex spatial patterns emerge.
 
 ---
 
@@ -75,18 +60,16 @@ experiment_neighborhoods(b=1.9, n=100, steps=200)
 
 ## How It Works
 
+In the beginning of the simulation, cell is initialized to be a cooperator or a defector. Long-term behavior is independent of initial percentage of cooperators, so I chose `p_cooperator = 0.9`, which is what Nowak and May did.
+
 Each timestep:
-1. Every cell accumulates a payoff from interactions with all neighbors
+1. Every cell accumulates a payoff from playing PD with all neighbors
 2. Every cell surveys its neighborhood and finds the highest-scoring cell
 3. Every cell adopts the strategy of that highest-scoring cell (ties broken randomly)
 4. All updates happen synchronously
-
-This **best-neighbor imitation** rule is what produces the rich spatial dynamics. Clusters of cooperators are stable because interior cells score higher than the defectors preying on their edges.
 
 ---
 
 ## References
 
 - Nowak, M. A. & May, R. M. (1992). [Evolutionary games and spatial chaos](https://www.nature.com/articles/359826a0). *Nature*, 359, 826–829.
-- Axelrod, R. (1984). *The Evolution of Cooperation*. Basic Books.
-- Szabó, G. & Fáth, G. (2007). [Evolutionary games on graphs](https://www.sciencedirect.com/science/article/pii/S0370157307000124). *Physics Reports*, 446(4–6), 97–216.
